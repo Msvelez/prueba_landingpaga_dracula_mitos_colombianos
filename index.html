@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Drácula · Leyendas que muerden</title>
+  <meta name="description" content="Conoce las criaturas más aterradoras de los mitos y leyendas de Colombia. Una experiencia interactiva en 3D de Drácula." />
+  <meta name="theme-color" content="#0b0507" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Rubik:wght@400;500;700;900&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="loader" id="loader" aria-hidden="true">
+    <div class="loader__drop"></div>
+    <p class="loader__text">Despertando criaturas…</p>
+  </div>
+
+  <header class="nav" id="nav">
+    <a href="#top" class="nav__brand" aria-label="Drácula, inicio">
+      <span class="nav__logo">Drácula</span>
+      <span class="nav__sub">Leyendas de Colombia</span>
+    </a>
+    <nav class="nav__links" aria-label="Secciones">
+      <a href="#bestiario">Bestiario</a>
+      <a href="#mapa">Mapa</a>
+      <a href="#linterna">Linterna</a>
+      <a href="#test">Test</a>
+    </nav>
+    <button class="sound" id="sound" aria-pressed="false" aria-label="Activar sonido">
+      <span class="sound__bars"><i></i><i></i><i></i><i></i></span>
+      <span class="sound__label">Sonido</span>
+    </button>
+  </header>
+
+  <main id="top">
+    <!-- HERO -->
+    <section class="hero" id="hero">
+      <canvas class="hero__canvas" id="hero-canvas"></canvas>
+      <div class="hero__vignette"></div>
+      <div class="hero__content">
+        <p class="kicker">Drácula presenta</p>
+        <h1 class="hero__title">Leyendas<br />que <span class="drip-text">muerden</span></h1>
+        <p class="hero__lead">Diez criaturas del folclor colombiano salieron del monte, del río y de la sabana. Míralas en 3D… si te atreves.</p>
+        <div class="hero__ctas">
+          <a href="#bestiario" class="btn btn--blood">Entrar al bestiario</a>
+          <a href="#test" class="btn btn--ghost">¿Quién te persigue?</a>
+        </div>
+      </div>
+      <div class="hero__switch">
+        <button class="viewer__arrow" id="h-prev" aria-label="Criatura anterior">←</button>
+        <button class="hero__current" id="h-open">
+          <span class="hero__count" id="h-count">01 / 10</span>
+          <strong class="hero__name" id="h-name">La Llorona</strong>
+          <span class="hero__tip">Toca para conocerla</span>
+        </button>
+        <button class="viewer__arrow" id="h-next" aria-label="Criatura siguiente">→</button>
+      </div>
+      <a href="#bestiario" class="scroll-hint" aria-label="Bajar"><span></span></a>
+    </section>
+
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track">
+        <span>No sigas el silbido</span><span>✦</span><span>No respondas al llanto</span><span>✦</span><span>No entres solo al monte</span><span>✦</span><span>No mires las luces de la sabana</span><span>✦</span><span>No bailes con el forastero de sombrero blanco</span><span>✦</span>
+        <span>No sigas el silbido</span><span>✦</span><span>No respondas al llanto</span><span>✦</span><span>No entres solo al monte</span><span>✦</span><span>No mires las luces de la sabana</span><span>✦</span><span>No bailes con el forastero de sombrero blanco</span><span>✦</span>
+      </div>
+    </div>
+
+    <!-- BESTIARIO -->
+    <section class="section bestiario" id="bestiario">
+      <div class="section__head reveal">
+        <p class="kicker">El bestiario</p>
+        <h2 class="section__title">Criaturas de <span class="red">Colombia</span></h2>
+        <p class="section__lead">Filtra por región y abre cada criatura para verla en 3D. Gírala, acércate… pero no demasiado.</p>
+      </div>
+      <div class="filters reveal" role="tablist" aria-label="Filtrar por región" id="filters"></div>
+      <div class="grid" id="grid"></div>
+    </section>
+
+    <!-- MAPA -->
+    <section class="mapa" id="mapa">
+      <div class="section mapa__head reveal">
+        <p class="kicker">Mapa del miedo</p>
+        <h2 class="section__title">¿Dónde <span class="red">acechan</span>?</h2>
+        <p class="section__lead">Baja para acercarte a Colombia. Toca una región o un pin para hacer zoom y ver a la criatura salir del mapa.</p>
+      </div>
+      <div class="mapa__stage" id="map-stage">
+        <canvas class="mapa__canvas" id="map-canvas"></canvas>
+        <div class="mapa__labels" id="map-labels"></div>
+        <div class="mapa__bar">
+          <div class="mapa__regions" id="map-regions" role="toolbar" aria-label="Regiones"></div>
+        </div>
+        <div class="mapa__zoom">
+          <button class="viewer__arrow" id="map-in" aria-label="Acercar">+</button>
+          <button class="viewer__arrow" id="map-out" aria-label="Alejar">−</button>
+        </div>
+        <p class="mapa__note">Regiones aproximadas · ubicaciones según la tradición oral</p>
+        <aside class="mapa__panel" id="map-panel" aria-live="polite"></aside>
+      </div>
+    </section>
+
+    <!-- LINTERNA -->
+    <section class="flash" id="linterna" aria-label="Juego de la linterna">
+      <div class="flash__content" id="flash-content">
+        <h2 class="flash__title">Ellos ya te vieron</h2>
+        <p class="flash__msg" style="--x:14%;--y:22%">No mires atrás</p>
+        <p class="flash__msg" style="--x:72%;--y:18%">El silbido está lejos…<br />o eso crees</p>
+        <p class="flash__msg" style="--x:80%;--y:72%">Algo salta en un solo pie</p>
+        <p class="flash__msg" style="--x:16%;--y:78%">Tu mamá no te está llamando</p>
+      </div>
+      <div class="flash__dark" id="flash-dark"></div>
+      <div class="flash__ui">
+        <p class="kicker">Modo linterna</p>
+        <p class="flash__hint">Mueve el cursor (o tu dedo) para iluminar la noche. Cuenta los ojos que encuentres.</p>
+        <p class="flash__count"><span id="eyes-found">0</span> / <span id="eyes-total">0</span> pares de ojos</p>
+      </div>
+    </section>
+
+    <!-- TEST -->
+    <section class="section test" id="test">
+      <div class="section__head reveal">
+        <p class="kicker">Test de medianoche</p>
+        <h2 class="section__title">¿Qué criatura <span class="red">te persigue</span>?</h2>
+        <p class="section__lead">Cuatro preguntas. Responde con sinceridad: ellas saben cuando mientes.</p>
+      </div>
+      <div class="quiz reveal" id="quiz"></div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta" id="cta">
+      <svg class="cta__drips" viewBox="0 0 1440 170" preserveAspectRatio="none" aria-hidden="true">
+        <path id="drips-path" />
+      </svg>
+      <div class="cta__inner reveal">
+        <p class="kicker">La noche apenas empieza</p>
+        <h2 class="cta__title">¿Te atreves?</h2>
+        <p class="cta__lead">Ya conoces a las criaturas. Descubre cuál te persigue a ti y reta a tus amigos a enfrentarse a la suya.</p>
+        <div class="hero__ctas">
+          <a class="btn btn--blood" href="#test">Hacer el test</a>
+          <button class="btn btn--outline-dark" id="share">Compartir mi resultado</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p><span class="nav__logo nav__logo--sm">Drácula</span> · Leyendas de Colombia</p>
+    <p class="footer__note">Relatos inspirados en la tradición oral colombiana. Cada región los cuenta a su manera.</p>
+  </footer>
+
+  <!-- VISOR 3D -->
+  <dialog class="viewer" id="viewer" aria-labelledby="v-name">
+    <div class="viewer__stage">
+      <canvas id="viewer-canvas"></canvas>
+      <p class="viewer__hint">Arrastra para girar · Pellizca o usa la rueda para acercar</p>
+      <div class="viewer__nav">
+        <button class="viewer__arrow" id="v-prev" aria-label="Criatura anterior">←</button>
+        <button class="viewer__arrow" id="v-next" aria-label="Criatura siguiente">→</button>
+      </div>
+    </div>
+    <div class="viewer__info">
+      <span class="chip" id="v-region"></span>
+      <h2 class="viewer__name" id="v-name"></h2>
+      <p class="viewer__tagline" id="v-tagline"></p>
+      <div class="meter meter--lg" id="v-meter"></div>
+      <p class="viewer__story" id="v-story"></p>
+      <div class="viewer__box">
+        <h3>Cómo sobrevivir</h3>
+        <p id="v-survive"></p>
+      </div>
+      <div class="viewer__box viewer__box--dark">
+        <h3>Dónde aparece</h3>
+        <p id="v-where"></p>
+      </div>
+      <p class="viewer__fact" id="v-fact"></p>
+    </div>
+    <button class="viewer__close" id="v-close" aria-label="Cerrar">✕</button>
+  </dialog>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
